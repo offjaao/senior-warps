@@ -1,0 +1,9 @@
+sql:
+  host: 'localhost'
+  user: 'root'
+  password: ''
+  database: 'minecraft'
+  port: 3306
+
+messages:
+#TODO: messages

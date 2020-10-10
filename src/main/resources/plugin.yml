@@ -1,0 +1,9 @@
+name: senior-warps
+version: ${project.version}
+main: com.github.offjaao.warps.WarpsPlugin
+authors: [ jaao ]
+description: Warp plugin created for Senior-Team
+commands:
+  createwarp:
+  warp:
+    aliases: [warps]

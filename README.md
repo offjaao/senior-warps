@@ -1,4 +1,3 @@
 # senior-warps
 Warp plugin for Senior-Team test.
-
-[![WARP SHOWCASE](https://img.youtube.com/vi/8--rFrz8p-A/0.jpg)](https://www.youtube.com/watch?v=8--rFrz8p-A&feature=youtu.be)
+[![Watch the video](https://i.imgur.com/vKb2F1B.png)](https://youtu.be/8--rFrz8p-A)

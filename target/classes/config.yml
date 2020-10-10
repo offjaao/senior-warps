@@ -6,4 +6,16 @@ sql:
   port: 3306
 
 messages:
-#TODO: messages
+  created: '&aWarp has been created!'
+  no_permission: '&cYou not have permission.'
+  already_exists: '&cWarp %warpname% already exists.'
+  icon_updated: '&aIcon has been updated.'
+  canceled_operation: '&cOperation canceled.'
+  deleted_warp: '&cWarp %warpname% has been deleted.'
+  teleported: '&aTeleported to %warpname%.'
+  password: '&aYou defined a new password! &7(%password%)'
+  type_password: '&eThis warp has a password, type it in the chat...'
+  set_name: '&bType a new name in chat:'
+  set_lore: '&bType a new lore in chat: &7(use ";" to change line)'
+  set_icon: '&bType a new icon in chat:'
+  set_password: '&bType a new password in chat:'

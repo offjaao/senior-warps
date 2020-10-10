@@ -5,6 +5,7 @@ import com.github.offjaao.warps.database.Storage;
 import com.github.offjaao.warps.entity.UserWarp;
 import com.github.offjaao.warps.entity.cache.UserCache;
 import com.github.offjaao.warps.enums.WarpCategory;
+import com.github.offjaao.warps.loader.ConfigurationLoader;
 import com.github.offjaao.warps.manager.WarpManager;
 import com.github.offjaao.warps.modal.Warp;
 import com.github.offjaao.warps.modal.cache.WarpCache;
@@ -21,6 +22,7 @@ public class CreateWarpCommand implements CommandExecutor {
     private final WarpCache warpCache = WarpsPlugin.getInstance().getWarpCache();
     private final UserCache userCache = WarpsPlugin.getInstance().getUserCache();
     private final WarpManager warpManager = WarpsPlugin.getInstance().getWarpManager();
+    private final ConfigurationLoader configurationLoader = WarpsPlugin.getInstance().getConfigurationLoader();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -38,7 +40,7 @@ public class CreateWarpCommand implements CommandExecutor {
         String category = args[1];
 
         if (category.equalsIgnoreCase("SERVER") && !player.hasPermission("warp.create.global")) {
-            player.sendMessage("§cYou not have permission to create server warps.");
+            player.sendMessage(configurationLoader.NO_PERMISSION.replace("&", "§ "));
             return false;
         }
 
@@ -46,11 +48,13 @@ public class CreateWarpCommand implements CommandExecutor {
         Warp warpName = warpCache.get(name);
 
         if (warpName != null && warpName.getCategory() == warpCategory) {
-            player.sendMessage("§cWarp '" + name + "' already created.");
+            player.sendMessage(configurationLoader.ALREADY_EXISTS
+            .replace("&", "§")
+            .replace("%warpname%", name));
             return false;
         }
 
-        ItemStack itemStack = new ItemBuilder(Material.STONE)
+        ItemStack defaultItem = new ItemBuilder(Material.STONE)
                 .name("§7" + name)
                 .lore("§eClick to teleport!")
                 .build();
@@ -62,12 +66,13 @@ public class CreateWarpCommand implements CommandExecutor {
                 null,
                 warpCategory,
                 player.getLocation(),
-                itemStack
+                defaultItem
         );
         if (warp.getCategory() == WarpCategory.PUBLIC || warp.getCategory() == WarpCategory.PRIVATE) {
             userWarp.addWarp(warp);
         }
         warpManager.saveWarp(warp);
+        player.sendMessage(configurationLoader.CREATED.replace("&", "§"));
         return false;
     }
 }

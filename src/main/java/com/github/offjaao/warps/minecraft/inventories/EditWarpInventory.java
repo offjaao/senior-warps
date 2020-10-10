@@ -4,6 +4,7 @@ import com.github.offjaao.warps.WarpsPlugin;
 import com.github.offjaao.warps.entity.UserWarp;
 import com.github.offjaao.warps.entity.cache.UserCache;
 import com.github.offjaao.warps.enums.WarpCategory;
+import com.github.offjaao.warps.loader.ConfigurationLoader;
 import com.github.offjaao.warps.manager.WarpManager;
 import com.github.offjaao.warps.modal.Warp;
 import com.github.offjaao.warps.utils.ChatAsker;
@@ -14,16 +15,14 @@ import com.github.offjaao.warps.utils.inventory.menu.MenuItem;
 import com.github.offjaao.warps.utils.inventory.menu.MenuNode;
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public class EditWarpInventory extends Menu<Warp> {
 
     private final WarpManager warpManager = WarpsPlugin.getInstance().getWarpManager();
     private final UserCache userCache = WarpsPlugin.getInstance().getUserCache();
+    private final ConfigurationLoader configurationLoader = WarpsPlugin.getInstance().getConfigurationLoader();
 
     public EditWarpInventory() {
         super(6, "Editing warp");
@@ -52,15 +51,15 @@ public class EditWarpInventory extends Menu<Warp> {
                     Player whoClicked = (Player) event.getWhoClicked();
                     whoClicked.closeInventory();
                     ChatAsker.builder()
-                            .messages("", "§aWhat will be the new name of this item?", "§7Type cancel to exit.", "")
+                            .messages("", configurationLoader.SET_NAME.replace("&", "§"), "")
                             .onComplete((player, s) -> {
                                 if (s.equalsIgnoreCase("cancel")) {
-                                    player.sendMessage("§cCanceled.");
+                                    player.sendMessage(configurationLoader.CANCELED.replace("&", "§"));
                                     return;
                                 }
                                 ItemStack build = warp.iconToBuilder().name(s.replace("&", "§")).build();
                                 warp.setIcon(build);
-                                player.sendMessage("§aNew name has defined.");
+                                player.sendMessage(configurationLoader.UPDATED_ICON.replace("&", "§"));
                                 warpManager.updateWarp(warp);
                             }).build().addPlayer(whoClicked);
                 })
@@ -78,16 +77,16 @@ public class EditWarpInventory extends Menu<Warp> {
                     Player whoClicked = ((Player) event.getWhoClicked());
                     whoClicked.closeInventory();
                     ChatAsker.builder()
-                            .messages("", "§aWhat will be the new lore of this item?", "§7Type cancel to exit.", "")
+                            .messages(configurationLoader.SET_LORE.replace("&", "§"))
                             .onComplete((player, s) -> {
                                 if (s.equalsIgnoreCase("cancel")) {
-                                    player.sendMessage("§cCanceled.");
+                                    player.sendMessage(configurationLoader.CANCELED.replace("&", "§"));
                                     return;
                                 }
                                 String[] split = s.split(";");
                                 ItemStack build = warp.iconToBuilder().removeLore().lore(split).build();
                                 warp.setIcon(build);
-                                player.sendMessage("§aNew lore has defined.");
+                                player.sendMessage(configurationLoader.UPDATED_ICON.replace("&", "§"));
                                 warpManager.updateWarp(warp);
                             }).build().addPlayer(whoClicked);
                 })
@@ -105,10 +104,10 @@ public class EditWarpInventory extends Menu<Warp> {
                     Player whoClicked = ((Player) event.getWhoClicked());
                     whoClicked.closeInventory();
                     ChatAsker.builder()
-                            .messages("", "§aWhat will be the new material id of this item?", "§7Type cancel to exit.", "")
+                            .messages(configurationLoader.SET_MATERIAL.replace("&", "§"))
                             .onComplete((player, s) -> {
                                 if (s.equalsIgnoreCase("cancel")) {
-                                    player.sendMessage("§cCanceled.");
+                                    player.sendMessage(configurationLoader.CANCELED.replace("&", "§"));
                                     return;
                                 }
                                 int i = NumberUtils.toInt(s, 1);
@@ -119,7 +118,7 @@ public class EditWarpInventory extends Menu<Warp> {
                                 }
                                 ItemBuilder type = warp.iconToBuilder().setType(material);
                                 warp.setIcon(type.build());
-                                player.sendMessage("§aNew icon has defined.");
+                                player.sendMessage(configurationLoader.UPDATED_ICON.replace("&", "§"));
                                 warpManager.updateWarp(warp);
                             }).build().addPlayer(whoClicked);
                 })
@@ -198,21 +197,19 @@ public class EditWarpInventory extends Menu<Warp> {
                     event.setCancelled(true);
                     whoClicked.closeInventory();
                     ChatAsker.builder()
-                            .messages("",
-                                    "§aEnter the new password for this warp!",
-                                    "§7Type remove to remove the password and cancel to exit.",
-                                    "")
+                            .messages("", configurationLoader.SET_PASSWORD.replace("&", "§"), "")
                             .onComplete((player, s) -> {
                                 if (s.equalsIgnoreCase("remove")) {
                                     warp.setPassword(null);
-                                    player.sendMessage("§cCanceled.");
+                                    player.sendMessage(configurationLoader.CANCELED.replace("&", "§"));
                                     return;
                                 } else if (s.equalsIgnoreCase("cancel")) {
-                                    player.sendMessage("§cCanceled");
+                                    player.sendMessage(configurationLoader.CANCELED.replace("&", "§"));
                                     return;
                                 }
                                 warp.setPassword(s);
-                                player.sendMessage("§aNew password has defined. §7(" + warp.getPassword() + ")");
+                                player.sendMessage(configurationLoader.PASSWORD.replace("&", "§")
+                                        .replace("%password%", warp.getPassword()));
                                 warpManager.updateWarp(warp);
                             }).build().addPlayer(whoClicked);
                 })
